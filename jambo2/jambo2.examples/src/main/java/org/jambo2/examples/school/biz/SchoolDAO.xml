@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.jambo2.examples.school.biz.SchoolDAO">
+	<!-- 字段绑定 开始 -->
+	<resultMap type="org.jambo2.examples.school.vo.SchoolVO" id="resultMap">
+		<id column="SCHOOL_ID" property="schoolId" />	<!-- 与SCHOOL表绑定id -->
+		<result column="SCHOOL_NAME" property="schoolName" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="ADDRESS" property="address" />
+		<result column="INTRODUTION" property="introdution" />
+		<result column="DISTRICT" property="district" />
+	</resultMap>
+	<!-- 字段绑定结束 -->
+
+	<!-- 添加SCHOOL信息开始 -->
+	<insert id="create" parameterType="org.jambo2.examples.school.vo.SchoolVO" flushCache="true">
+		insert into SCHOOL
+		<!-- 添加表字段 -->
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolId != null">SCHOOL_ID,</if>
+			 <if test="schoolName != null">SCHOOL_NAME,</if>
+			<if test="province !=null">PROVINCE,</if>
+			<if test="city != null">CITY,</if>
+			<if test="address != null">ADDRESS,</if>
+			<if test="introdution != null">INTRODUTION,</if>
+			<if test="district != null">DISTRICT,</if>
+		</trim>
+		<!-- 注入控制层字段 -->
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="schoolId !=  null">#{schoolId},</if>
+			<if test="schoolName != null">#{schoolName},</if>
+			<if test="province !=null">#{province},</if>
+			<if test="city != null">#{city},</if>
+			<if test="address != null">#{address},</if>
+			<if test="introdution != null">#{introdution},</if>
+			<if test="district != null">#{district},</if>
+		</trim>
+	</insert>
+	<!-- 添加SCHOOL信息结束 -->
+
+	<!-- 建表SCHOOL开始 -->
+	<update id="createTable">
+		CREATE TABLE SCHOOL (
+		   SCHOOL_ID varchar(22) NOT NULL,
+		   SCHOOL_NAME  varchar(64),
+		   PROVINCE varchar(6),
+		   CITY varchar(8),
+		   DISTRICT varchar(8),
+		   ADDRESS varchar(128),
+		   INTRODUTION varchar(2000) ,
+		   primary key (SCHOOL_ID)
+		)
+	</update>
+	<!-- 建表SCHOOL结束 -->
+
+	<!-- 删除SCHOOL开始 -->
+	<delete id="delete" parameterType="int" flushCache="true">
+		delete from SCHOOL
+		where SCHOOL_ID = #{schoolId}
+	</delete>
+	<!-- 删除SCHOOL结束 -->
+
+	<!-- 更新SCHOOL开始 -->
+	<update id="update" parameterType="org.jambo2.examples.school.vo.SchoolVO" flushCache="true">
+		update SCHOOL
+		<set>
+			<if test="schoolId !=  null">SCHOOL_ID = #{schoolId},</if>
+			<if test="schoolName != null">SCHOOL_NAME = #{schoolName},</if>
+			<if test="province !=null">PROVINCE = #{province},</if>
+			<if test="city != null">CITY = #{city},</if>
+			<if test="address != null">ADDRESS = #{address},</if>
+			<if test="introdution != null">INTRODUTION = #{introdution},</if>
+			<if test="district != null">DISTRICT = #{district},</if>
+		</set>
+		where SCHOOL_ID = #{schoolId}
+	</update>
+	<!-- 更新SCHOOL结束 -->
+	
+	<!-- 根据ID查询开始 -->
+	<select id="findByPK" resultMap="resultMap" parameterType="int">
+		select i.*
+		from SCHOOL i  where i.SCHOOL_ID=#{schoolId}
+	</select>
+
+	<!-- 获取全量机构 开始 -->
+	<select id="queryAll" resultMap="resultMap" statementType="STATEMENT">
+		select i.* from SCHOOL i
+	</select>
+	<!-- 获取全量机构 结束 -->
+
+	<!-- 对website进行分页查询开始 -->
+	<select id="queryByPage" resultMap="resultMap">
+		<!--shiahbasic和 basic间进行连接查询 -->
+		select i.*
+		from SCHOOL i
+		limit ${pageNo*pageSize},#{pageSize}
+	</select>
+	<!-- 查询所有website结束 -->
+
+</mapper>

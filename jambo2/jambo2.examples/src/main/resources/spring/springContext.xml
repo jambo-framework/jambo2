@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context-4.0.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+               ">
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/spring/springconfig.properties"/>
+    </bean>
+
+    <!--扫描BO类，自动注册到spring-->
+    <context:component-scan
+            base-package="org.jambo2.examples.**.biz, com.**.parser">
+    </context:component-scan>
+    <!-- 打开aop 注解 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- 域数据源标识，可用来注入服务实现类 -->
+    <!--<bean id="domainDBUser" class="com.jambo.mvno.system.persistent.SystemUser"/>-->
+
+</beans>

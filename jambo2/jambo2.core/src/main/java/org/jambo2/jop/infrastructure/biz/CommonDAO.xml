@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.jambo2.jop.infrastructure.biz.CommonDAO">
+<!--<mapper namespace="org.jambo2.jop.infrastructure.db.BaseDAO">-->
+	<!-- 通用查询：根据条件动态生成查询sql -->
+	<select id="queryBySQL" resultType="Map" statementType="STATEMENT">
+		select *
+		from ${table}
+		where
+		<foreach item="item" index="key" collection="wheres" open=""
+			separator="AND" close="">${key} = ${item}</foreach>
+			
+		<if test="order !=null">
+			order by ${order} desc 
+		</if>
+		<if test="begin != null">
+			limit ${begin}
+			<if test="end !=null ">
+				,${end}
+			</if>
+		</if>
+	</select>
+
+	<!-- 通用主键查询：根据主键查询，只支持与条件 -->
+	<select id="findBySQL" resultType="Map" statementType="STATEMENT">
+		select *
+		from ${table}
+		where
+		<foreach item="item" index="key" collection="wheres" open=""
+				 separator="AND" close="">${key} = ${item}</foreach>
+	</select>
+
+	<!-- 通用查询：根据条件生成计数查询sql，只支持与条件 -->
+	<select id="countBySQL" resultType="int" statementType="STATEMENT">
+		select count(*)
+		from ${table}
+		where
+		<foreach item="item" index="key" collection="wheres" open=""
+			separator="AND" close="">${key} = ${item}</foreach>
+	</select>
+
+	<!-- 通用更新：根据条件生成更新sql，只支持与条件 -->
+	<update id="updateBySQL">
+		update ${table} set
+		<foreach item="field" index="name" collection="fields" open=""
+			separator="," close="">
+			${name}=#{field}
+		</foreach>
+		where
+		<foreach item="item" index="key" collection="wheres" open=""
+			separator="AND" close="">${key} = ${item}</foreach>
+	</update>
+
+	<!-- 通用删除：根据条件生成删除sql，只支持与条件 -->
+	<update id="deleteBySQL">
+		delete from ${table} where
+		<foreach item="item" index="key" collection="wheres" open=""
+			separator="AND" close="">${key} = #{item}</foreach>
+	</update>
+
+	<!-- 通用插入：根据条件生成插入sql -->
+	<insert id="insertBySQL">
+		insert into ${table}
+		<foreach item="field" index="key" collection="fields" open="("
+			separator="," close=")">${key}</foreach>
+		values
+		<foreach item="field" index="key" collection="fields" open="("
+			separator="," close=")">#{field}</foreach>
+		;
+	</insert>
+</mapper>

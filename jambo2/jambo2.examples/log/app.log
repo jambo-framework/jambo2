@@ -1,0 +1,12 @@
+2017-02-18 09:23:53,530 INFO org.hsqldb.persist.Logger (Test worker:[]) checkpointClose start
+2017-02-18 09:23:53,863 INFO org.hsqldb.persist.Logger (Test worker:[]) checkpointClose end
+2017-02-18 09:23:54,062 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==>  Preparing: insert into SCHOOL ( SCHOOL_ID, SCHOOL_NAME, INTRODUTION ) values ( ?, ?, ? ) 
+2017-02-18 09:23:54,087 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==> Parameters: 1(Integer), test1(String), testCreate(String)
+2017-02-18 09:23:54,148 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==>  Preparing: insert into SCHOOL ( SCHOOL_ID, SCHOOL_NAME, INTRODUTION ) values ( ?, ?, ? ) 
+2017-02-18 09:23:54,151 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==> Parameters: 0(Integer), test1(String), testCreate(String)
+2017-02-18 09:58:53,207 INFO org.hsqldb.persist.Logger (Test worker:[]) checkpointClose start
+2017-02-18 09:58:53,682 INFO org.hsqldb.persist.Logger (Test worker:[]) checkpointClose end
+2017-02-18 09:58:54,326 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==>  Preparing: insert into SCHOOL ( SCHOOL_ID, SCHOOL_NAME, INTRODUTION ) values ( ?, ?, ? ) 
+2017-02-18 09:58:54,435 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==> Parameters: 1(Integer), test1(String), testCreate(String)
+2017-02-18 09:58:54,650 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==>  Preparing: insert into SCHOOL ( SCHOOL_ID, SCHOOL_NAME, INTRODUTION ) values ( ?, ?, ? ) 
+2017-02-18 09:58:54,651 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (Test worker:[]) ==> Parameters: 0(Integer), test1(String), testCreate(String)

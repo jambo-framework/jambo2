@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+            </bean>
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <!--<property name="objectMapper" ref="jacksonObjectMapper" />-->
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <context:component-scan base-package="com" use-default-filters="false">
+        <context:include-filter type="regex" expression="org.jambo2.examples.web.*Action"/>
+    </context:component-scan>
+
+    <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+    <!--<bean id="mappingJacksonHttpMessageConverter"-->
+          <!--class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
+        <!--<property name="supportedMediaTypes">-->
+            <!--<list>-->
+                <!--<value>text/html;charset=UTF-8</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:/i18n/public" />
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+    <!--ession 解析区域 -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <!-- property name="defaultLocale" value="en"/> -->
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" >
+        <property name="alwaysUseFullPath" value="true"/>
+        <property name="caseSensitive" value="true"/>
+        <property name="basePackage" value="com.jambo.exam.web"/>
+    </bean>
+
+    <mvc:resources mapping="/img/**" location="/img/" />
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/js/**" location="/js/" />
+    <mvc:view-controller path="/inc/**" view-name="/inc/"/>
+
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/**" />-->
+            <!--<bean class="com.jambo.jop.ui.interceptor.SessionInterceptor" />-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+    <!--公共配置-->
+    <import resource="springContext.xml"/>
+    <!--公共库连接配置/默认数据库-->
+    <import resource="commonDBContext.xml"/>
+    <!--地市库连接配置-->
+    <!--<import resource="cityDBContext.xml"/>-->
+    <!--<import resource="example-client.xml"/>-->
+
+    <!-- Web环境下使用 -->
+    <!--<bean name="springContext" class="com.jambo.jop.common.spring.SpringContextManager"/>-->
+
+</beans>

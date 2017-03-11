@@ -1,0 +1,25 @@
+version = '1.0.0'
+apply plugin:"war"
+
+dependencies {
+    compile project(':jambo2.core')
+
+    compile group: 'com.jolbox', name: 'bonecp', version: '0.7.1.RELEASE'
+
+    compile("org.springframework:spring-webmvc:4.3.5.RELEASE")
+    //内存测试数据库，用于范例与测试
+    compile("org.hsqldb:hsqldb:2.3.2")
+    testCompile("org.springframework:spring-test:4.3.5.RELEASE")
+
+    providedCompile 'javax.servlet:servlet-api:2.5'
+}
+
+war{
+//    dependsOn jarWithoutResources
+    from("$projectDir/src/main/resources") {
+        include "*.properties"
+        into("WEB-INF/classes")
+    }
+    classpath=classpath - sourceSets.main.output
+    classpath fileTree(dir:libsDir, include:"${project.name}-${version}.jar")
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+<bean id="ds_common" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <!-- 数据库驱动 -->
+        <property name="driverClass" value="org.hsqldb.jdbcDriver" />
+        <!--<property name="driverClass" value="org.postgresql.Driver" />-->
+        <!-- 相应驱动的jdbcUrl,你懂的 -->
+        <property name="jdbcUrl" value="${common.url}" />
+        <!-- 数据库的用户名 -->
+        <property name="username" value="${common.user}" />
+        <!-- 数据库的密码 -->
+        <property name="password" value="${common.pwd}" />
+        <!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->
+        <property name="idleConnectionTestPeriodInMinutes" value="60" />
+        <!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->
+        <property name="idleMaxAgeInMinutes" value="200" />
+        <!-- 每个分区最大的连接数 -->
+        <property name="maxConnectionsPerPartition" value="${common.maxConnections}" />
+        <!-- 每个分区最小的连接数 -->
+        <property name="minConnectionsPerPartition" value="${common.minConnections}" />
+        <!-- 分区数 ，默认值2，最小1，推荐3-4，视应用而定-->
+        <property name="partitionCount" value="${common.partitionCount}" />
+        <!-- 每次去拿数据库连接的时候一次性要拿几个,默认值：2 -->
+        <property name="acquireIncrement" value="${common.acquireIncrement}" />
+        <!-- 缓存prepared statements的大小，默认值：0 -->
+        <property name="statementsCacheSize" value="${common.statementsCacheSize}" />
+        <!-- 每个分区释放链接助理进程的数量，默认值：3，除非你的一个数据库连接的时间内做了很多工作，不然过多的助理进程会影响你的性能 -->
+        <property name="releaseHelperThreads" value="${common.releaseHelperThreads}" />
+    </bean>
+
+    <bean id="sessionFactory_DB_COMMON"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="ds_common" />
+        <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+        <!--property name="mapperLocations" value="org/jambo2" / -->
+        <property name="configLocation" value="classpath:/spring/mybatis-config.xml" />
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.jambo2.**.biz" />
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory_DB_COMMON" />
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager_DB_COMMON"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds_common" />
+    </bean>
+
+    <!-- 注册自动代理创建，为业务Bean添加拦截器 -->
+    <aop:config proxy-target-class="true" >
+        <!--<aop:pointcut id="DB_COMMON_BOMethod" expression="execution(* org..*BO.*(..))"/>-->
+        <!--<aop:pointcut id="DB_COMMON_BOMethod" expression="execution(* org.jambo2..*BO.*(..))"/>-->
+        <aop:pointcut id="DB_COMMON_BOMethod" expression="execution(* org..*biz.*(..))" />
+        <aop:advisor pointcut-ref="DB_COMMON_BOMethod" advice-ref="DB_COMMON_Advice" />
+    </aop:config>
+
+    <!--  配置事务传播特性 -->
+    <tx:advice id="DB_COMMON_Advice" transaction-manager="transactionManager_DB_COMMON">
+        <tx:attributes>
+            <tx:method name="create*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="query*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+
+            <tx:method name="*" propagation="SUPPORTS" />
+        </tx:attributes>
+    </tx:advice>
+</beans>

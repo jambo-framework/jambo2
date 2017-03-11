@@ -1,0 +1,7 @@
+version = '1.0.0'
+
+dependencies {
+    compile("org.springframework:spring-webmvc:4.3.5.RELEASE")
+
+    compile 'javax.servlet:servlet-api:2.5'
+}
